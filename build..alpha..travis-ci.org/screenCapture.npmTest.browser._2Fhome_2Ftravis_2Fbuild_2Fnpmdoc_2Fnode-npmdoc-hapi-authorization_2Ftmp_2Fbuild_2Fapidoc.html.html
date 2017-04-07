@@ -1,0 +1,354 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a href="https://github.com/toymachiner62/hapi-authorization">hapi-authorization (v3.0.2)</a>
+</h1>
+<h4>ACL support for hapijs apps</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.hapi-authorization">module hapi-authorization</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.hapi-authorization.register">
+            function <span class="apidocSignatureSpan">hapi-authorization.</span>register
+            <span class="apidocSignatureSpan">(server, options, next)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">hapi-authorization.</span>acl</span>
+
+        </li>
+
+        <li>
+
+            <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">hapi-authorization.</span>schema</span>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.hapi-authorization.acl">module hapi-authorization.acl</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.hapi-authorization.acl.checkRoles">
+            function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>checkRoles
+            <span class="apidocSignatureSpan">(user, role, hierarchy)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.hapi-authorization.acl.fetchEntity">
+            function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>fetchEntity
+            <span class="apidocSignatureSpan">(query, param, request, cb)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.hapi-authorization.acl.validateEntityAcl">
+            function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>validateEntityAcl
+            <span class="apidocSignatureSpan">(user, role, entity, validator, options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.hapi-authorization.schema">module hapi-authorization.schema</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.hapi-authorization.schema.assert">
+            function <span class="apidocSignatureSpan">hapi-authorization.schema.</span>assert
+            <span class="apidocSignatureSpan">(type, options, message)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.hapi-authorization" id="apidoc.module.hapi-authorization">module hapi-authorization</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.hapi-authorization.register" id="apidoc.element.hapi-authorization.register">
+        function <span class="apidocSignatureSpan">hapi-authorization.</span>register
+        <span class="apidocSignatureSpan">(server, options, next)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">register = function (server, options, next) {
+
+	try {
+		// Validate the options passed into the plugin
+		Schema.assert('plugin', options, 'Invalid settings');
+
+		var settings = Hoek.applyToDefaults(internals.defaults, options || {});
+
+		server.bind({
+			config: settings
+		});
+
+		// Validate the server options on the routes
+		if (server.after) { // Support for hapi &lt; 11
+			server.after(internals.validateRoutes);
+		} else {
+			server.ext('onPreStart', internals.validateRoutes);
+		}
+		server.ext('onPreHandler', internals.onPreHandler);
+
+		next();
+	} catch (e) {
+
+		next(e);
+	}
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		register: require('hapi-authorization')
+		options: {
+		  roles: false	// By setting to false, you are not using an authorization hierarchy and you do not need to specify all the potential
+ roles here
+		}
+	}
+];
+
+server.<span class="apidocCodeKeywordSpan">register</span>(plugins, function(err) {
+...
+```
+
+## Using hapi-authorization with custom roles
+1. Include the plugin in your hapijs app.
+Example:
+```js
+...</pre></li>
+    </ul>
+
+
+
+
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.hapi-authorization.acl" id="apidoc.module.hapi-authorization.acl">module hapi-authorization.acl</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.hapi-authorization.acl.checkRoles" id="apidoc.element.hapi-authorization.acl.checkRoles">
+        function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>checkRoles
+        <span class="apidocSignatureSpan">(user, role, hierarchy)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">checkRoles = function (user, role, hierarchy) {
+
+	if ((!user) || (!internals.isGranted(user.role, role, hierarchy))) {
+		return Boom.forbidden('Unauthorized');
+	}
+
+	return null;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.hapi-authorization.acl.fetchEntity" id="apidoc.element.hapi-authorization.acl.fetchEntity">
+        function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>fetchEntity
+        <span class="apidocSignatureSpan">(query, param, request, cb)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">fetchEntity = function (query, param, request, cb) {
+
+	var def = Q.defer();
+	query(param, request, function(err, entity) {
+
+		if (err &amp;&amp; err.isBoom) {
+			return def.reject(err);
+		} else if (err) {
+			return def.reject(Boom.badRequest('Bad Request', err));
+		}
+		else if (!entity) {
+			return def.reject(Boom.notFound());
+		}
+		else {
+			def.resolve(entity);
+		}
+	});
+
+	return def.promise;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.hapi-authorization.acl.validateEntityAcl" id="apidoc.element.hapi-authorization.acl.validateEntityAcl">
+        function <span class="apidocSignatureSpan">hapi-authorization.acl.</span>validateEntityAcl
+        <span class="apidocSignatureSpan">(user, role, entity, validator, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">validateEntityAcl = function (user, role, entity, validator, options) {
+
+	var def = Q.defer();
+
+	if (!entity) {
+		def.reject(new Error('validateUserACL must run after fetchACLEntity'));
+	} else if (!user) {
+		def.reject(new Error('User is required, please make sure this method requires authentication'));
+	} else {
+
+		if (validator) {
+
+			entity[validator](user, role, function(err, isValid) {
+
+				if (err) {
+					def.reject(new Error(err));
+				} else if (!isValid) {	// Not granted
+					def.reject(Boom.forbidden('Unauthorized'));
+				} else {	// Valid
+					def.resolve(isValid);
+				}
+			});
+		} else {
+			// Use the default validator
+			var isValid = internals.defaultEntityAclValidator(user, role, entity, options);
+
+			if (isValid) {
+				def.resolve(isValid);
+			} else {
+				def.reject(Boom.forbidden('Unauthorized'));
+			}
+		}
+	}
+
+	return def.promise;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.hapi-authorization.schema" id="apidoc.module.hapi-authorization.schema">module hapi-authorization.schema</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.hapi-authorization.schema.assert" id="apidoc.element.hapi-authorization.schema.assert">
+        function <span class="apidocSignatureSpan">hapi-authorization.schema.</span>assert
+        <span class="apidocSignatureSpan">(type, options, message)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">assert = function (type, options, message) {
+
+	var validationObj = Joi.validate(options, internals[type]);
+	var error = validationObj.error;
+	var errorMessage = null;
+
+	// If there is an error, build a nice error message
+	if(error) {
+		errorMessage = error.name + ':';
+		error.details.forEach(function(err) {
+			errorMessage += ' ' + err.message;
+		});
+	}
+
+	// If there is an error build the error message
+	Hoek.assert(!error, 'Invalid', type, 'options', message ? '(' + message + ')' : '', errorMessage);
+
+	return validationObj.value;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+		errorMessage = error.name + ':';
+		error.details.forEach(function(err) {
+			errorMessage += ' ' + err.message;
+		});
+	}
+
+	// If there is an error build the error message
+	Hoek.<span class="apidocCodeKeywordSpan">assert</span>(!error, 'Invalid', type, 'options', message ? '(&amp;#
+x27; + message + ')' : '', errorMessage);
+
+	return validationObj.value;
+};
+
+
+/**
+* Validation rules for a route's params
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
