@@ -1,17 +1,40 @@
 {
-    "buildNpmdoc":"hapi-authorization",
+    "author": "kai zhu <kaizhu256@gmail.com>",
+    "buildNpmdoc": "hapi-authorization",
+    "description": "api documentation for [hapi-authorization (v3.0.2)](https://github.com/toymachiner62/hapi-authorization) [![npm package](https://img.shields.io/npm/v/npmdoc-hapi-authorization.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-hapi-authorization) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-hapi-authorization.svg)](https://travis-ci.org/npmdoc/node-npmdoc-hapi-authorization)",
     "devDependencies": {
-        "hapi-authorization": "*",
         "electron-lite": "kaizhu256/node-electron-lite#alpha",
+        "hapi-authorization": "*",
         "utility2": "kaizhu256/node-utility2#alpha"
     },
-    "name":"npmdoc-hapi-authorization",
+    "engines": {
+        "node": ">=4.0"
+    },
+    "homepage": "https://github.com/npmdoc/node-npmdoc-hapi-authorization",
+    "keywords": [
+        "documentation",
+        "hapi-authorization"
+    ],
+    "license": "MIT",
+    "main": "lib.npmdoc_hapi_authorization.js",
+    "name": "npmdoc-hapi-authorization",
+    "nameAlias": "npmdoc_hapi_authorization",
+    "nameOriginal": "npmdoc-hapi-authorization",
+    "os": [
+        "darwin",
+        "linux"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/npmdoc/node-npmdoc-hapi-authorization"
     },
     "scripts": {
-        "build-ci": "utility2 shReadmeTest build_ci.sh"
+        "build-ci": "utility2 shReadmeTest build_ci.sh",
+        "env": "env",
+        "heroku-postbuild": "(set -e; npm install \"kaizhu256/node-utility2#alpha\"; utility2 shDeployHeroku)",
+        "postinstall": "if [ -f npm_scripts.sh ]; then ./npm_scripts.sh postinstall; fi",
+        "start": "(set -e; export PORT=${PORT:-8080}; utility2 start test.js)",
+        "test": "(set -e; export PORT=$(utility2 shServerPortRandom); utility2 test test.js)"
     },
     "version": "0.0.1"
 }
